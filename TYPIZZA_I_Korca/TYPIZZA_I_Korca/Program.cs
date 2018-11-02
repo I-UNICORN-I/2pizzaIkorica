@@ -10,17 +10,25 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types.InlineKeyboardButtons;
 using Telegram.Bot.Types;
+using ApiAiSDK;
+using ApiAiSDK.Model;
 
 namespace TYPIZZA_I_Korca
 {
     class Program
     {
         static TelegramBotClient Bot;
-
+        static ApiAi apiAi;
 
         static void Main(string[] args)
         {
+
+            //6146f73d9b1f4cd5afa2b65c9d78da03
+
             Bot = new TelegramBotClient("720232352:AAH_uJK6EXMelamUl-Xo-zQKUifVwLmdve8");
+            AIConfiguration cofig = new AIConfiguration("6146f73d9b1f4cd5afa2b65c9d78da03", SupportedLanguage.Russian);
+            apiAi = new ApiAi(cofig);
+
 
             Bot.OnMessage += BotOnMessageReceived;
             Bot.OnCallbackQuery += BOtOnCallbacQueryReceived;
@@ -83,12 +91,12 @@ namespace TYPIZZA_I_Korca
 
                             InlineKeyboardButton.WithUrl ("Hard-Pizza","https://liza.ua/lifestyle/food/10-luchshih-retseptov-pitstsyi-so-vsego-mira/")
                                },
-                               new[]
-                               {
+                            /*    new[]
+                              {
                                    InlineKeyboardButton.WithCallbackData("пункт 1"),
 
                                    InlineKeyboardButton.WithCallbackData("пункт 2")
-                               }
+                               }*/
 
                     });
                     await Bot.SendTextMessageAsync(message.From.Id, "оберiть пункт меню", replyMarkup: inlineKeyboard);
@@ -113,6 +121,13 @@ namespace TYPIZZA_I_Korca
                             }
                     });
                     await Bot.SendTextMessageAsync(message.Chat.Id, "Кнопка", replyMarkup: replyKeyboard);
+                    break;
+                default:
+                    var response = apiAi.TextRequest(message.Text);
+                    string answer = response.Result.Fulfillment.Speech;
+                    if (answer == "")
+                        answer = "____";
+                      await Bot.SendTextMessageAsync(message.From.Id, answer);
                     break;
 
 
