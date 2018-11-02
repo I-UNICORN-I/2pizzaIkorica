@@ -9,8 +9,7 @@ using Telegram.Bot.Args;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types.InlineKeyboardButtons;
-
-
+using Telegram.Bot.Types;
 
 namespace TYPIZZA_I_Korca
 {
@@ -36,9 +35,20 @@ namespace TYPIZZA_I_Korca
 
         }
 
-        private static void BOtOnCallbacQueryReceived(object sender, CallbackQueryEventArgs e)
+        private static async void BOtOnCallbacQueryReceived(object sender, CallbackQueryEventArgs e)
         {
-            throw new NotImplementedException();
+            string buttoText = e.CallbackQuery.Data;
+            string name = $"{e.CallbackQuery.From.FirstName} {e.CallbackQuery.From.LastName}";
+            Console.WriteLine($"{name}:натискнув кнопку {buttoText}");
+
+            try
+            {
+                await Bot.AnswerCallbackQueryAsync(e.CallbackQuery.Id, $"Ви натиснули кнопку {buttoText}");
+            }
+            catch
+            {
+
+            }
         }
 
         private static async void BotOnMessageReceived(object sender, MessageEventArgs e)
@@ -60,7 +70,7 @@ namespace TYPIZZA_I_Korca
 @"Список команд:
 /start - запуск бота
 /inline - вивiд меню
-/button - вивiд кнопочок";
+/Keyboard - вивiд кнопочок";
                     await Bot.SendTextMessageAsync(message.From.Id, text);
                     break;
 
@@ -82,6 +92,27 @@ namespace TYPIZZA_I_Korca
 
                     });
                     await Bot.SendTextMessageAsync(message.From.Id, "оберiть пункт меню", replyMarkup: inlineKeyboard);
+                    break;
+
+                case "/Keyboard":
+                    var replyKeyboard = new ReplyKeyboardMarkup(new[]
+                    {
+                       new[]
+                        { 
+                          
+                            new KeyboardButton("Привiт"),
+                             new KeyboardButton("Що ти вмієш?"),
+                           new KeyboardButton("Рецепт швидкої вечері."),
+                           new KeyboardButton("Рецепт швидкого сніданку.")
+                        },
+                             new[]
+                            {
+                                new KeyboardButton("Контакт") {RequestContact = true},
+                             new KeyboardButton("Де ти") {RequestLocation = true}
+
+                            }
+                    });
+                    await Bot.SendTextMessageAsync(message.Chat.Id, "Кнопка", replyMarkup: replyKeyboard);
                     break;
 
 
