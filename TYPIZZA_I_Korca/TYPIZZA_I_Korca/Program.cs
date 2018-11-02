@@ -114,6 +114,13 @@ namespace TYPIZZA_I_Korca
                     });
                     await Bot.SendTextMessageAsync(message.Chat.Id, "Кнопка", replyMarkup: replyKeyboard);
                     break;
+                default:
+                    var response = apiAi.TextRequest(message.Text);
+                    string answer = response.Result.Fulfillment.Speech;
+                    if (answer == "")
+                        answer = "sdfdsgdsfgdg_";
+                    await Bot.SendTextMessageAsync(message.From.Id, answer);
+                    break;
 
 
             }
