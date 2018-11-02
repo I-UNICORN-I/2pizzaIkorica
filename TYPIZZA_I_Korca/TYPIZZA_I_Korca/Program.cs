@@ -126,8 +126,15 @@ namespace TYPIZZA_I_Korca
                     var response = apiAi.TextRequest(message.Text);
                     string answer = response.Result.Fulfillment.Speech;
                     if (answer == "")
-                        answer = "____";
+                        /*
+<<<<<<< HEAD
+                        answer = "";
                       await Bot.SendTextMessageAsync(message.From.Id, answer);
+=======*/
+                        answer = "____sdfdsgdsfgdg_";
+                    await Bot.SendTextMessageAsync(message.From.Id, answer);
+                    /*
+>>>>>>> v11*/
                     break;
 
 
